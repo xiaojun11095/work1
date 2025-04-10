@@ -1,88 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="no-referrer">
+    <title>中国地图与西藏地图联动</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        .map-container {
+            width: 1800px;  /* 进一步增加容器宽度 */
+            height: 900px;
+            margin: 0 auto;
+            position: relative;
+            background: #f5f7fa;  /* 添加背景色 */
+        }
+        #main-map {
+            width: 40%;
+            height: 80%;
+            border: 4px solid #4a90e2;
+            position: absolute;
+            left: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px rgba(74,144,226,0.4);
+        }
+        #sub-map {
+            width: 40%;
+            height: 80%;
+            border: 4px solid #FF6B6B;
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px rgba(255,107,107,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <div id="main-map"></div>
+        <div id="sub-map"></div>
+    </div>
 
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Child Deprivation Analysis - UNICEF Data</title>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; color: #333; }
-            .container { width: 90%; margin: 0 auto; padding: 20px; }
-            h1 { color: #0066A1; }
-            h2 { color: #009FDA; margin-top: 30px; }
-            img { max-width: 100%; height: auto; margin: 20px 0; border: 1px solid #ddd; }
-            .insight { background-color: #f0f9ff; padding: 15px; border-left: 5px solid #0066A1; margin: 20px 0; }
-            .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 0.8em; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Global Analysis of Child Deprivation - UNICEF Data</h1>
+    <script>
+        // 初始化两个图表实例
+        const mainChart = echarts.init(document.getElementById('main-map'));
+        const subChart = echarts.init(document.getElementById('sub-map'));
+
+        Promise.all([
+            fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json').then(r => r.json()),
+            fetch('https://geo.datav.aliyun.com/areas_v3/bound/540000_full.json').then(r => r.json())
+        ]).then(([chinaGeo, tibetGeo]) => {
             
-            <div class="insight">
-                <p>This analysis examines UNICEF data on the percentage of children suffering from exactly three types of deprivation, 
-                using homogeneous moderate standards. We explore geographical patterns, socioeconomic correlations, gender differences, 
-                and temporal trends to understand the global situation of child deprivation.</p>
-            </div>
-            
-            <h2>1. Global Distribution of Child Deprivation</h2>
-            <img src="world_map.png" alt="World Map of Child Deprivation">
-            <p>The world map shows the geographical distribution of child deprivation. African countries generally show higher rates, 
-            while developed nations in North America and Europe have significantly lower percentages.</p>
-            
-            <h2>2. Countries with Highest Child Deprivation</h2>
-            <img src="top_countries.png" alt="Top 10 Countries with Highest Child Deprivation">
-            <p>The bar chart highlights the top 10 countries with the highest average percentage of children suffering from three types of deprivation.
-            Most of these countries are in Africa and face significant economic challenges.</p>
-            
-            <h2>3. Relationship with GDP per Capita</h2>
-            <img src="scatter_plot.png" alt="Relationship Between Child Deprivation and GDP">
-            <p>The scatter plot reveals a strong negative correlation between GDP per capita and child deprivation rates.
-            Countries with higher economic output generally have lower percentages of children suffering from deprivation.</p>
-            
-            <h2>4. Regional Analysis</h2>
-            <img src="regional_analysis.png" alt="Child Deprivation by Continent">
-            <p>This analysis shows average child deprivation rates by continent. Africa has the highest rates,
-            followed by Asia, while Europe and the Americas have substantially lower rates.</p>
-            
-            <h2>5. Correlation with Socioeconomic Factors</h2>
-            <img src="correlation_analysis.png" alt="Correlation Between Child Deprivation and Socioeconomic Factors">
-            <p>The correlation analysis reveals how child deprivation relates to various socioeconomic indicators.
-            There are strong negative correlations with GDP and life expectancy, and positive correlations with birth rates.</p>
-            
-            <h2>6. Analysis by Income Level</h2>
-            <img src="income_analysis.png" alt="Child Deprivation by Income Level">
-            <p>This chart categorizes countries by income level and shows the clear relationship between national income and child deprivation.
-            Low-income countries have significantly higher rates of child deprivation compared to high-income nations.</p>
-            
-            <h2>7. Gender Analysis</h2>
-            <img src="gender_analysis.png" alt="Male vs Female Child Deprivation">
-            <p>This analysis compares deprivation rates between male and female children. While most countries show similar rates
-            across genders, some notable differences exist, potentially indicating gender-based disparities in access to resources and services.</p>
-            
-            <h2>8. Trends Over Time</h2>
-            <img src="trend_analysis.png" alt="Trends in Child Deprivation Over Time">
-            <p>This chart tracks changes in child deprivation over time for selected countries. While some countries have made significant
-            progress in reducing deprivation, others have seen stagnation or even increases.</p>
-            
-            <h2>9. Case Study: Angola</h2>
-            <img src="time_series.png" alt="Child Deprivation in Angola Over Time">
-            <p>This time series focuses on Angola as a case study, showing how child deprivation has changed over time.
-            Factors such as policy changes, economic development, and social programs can significantly impact child welfare indicators.</p>
-            
-            <div class="insight">
-                <h3>Key Findings:</h3>
-                <ul>
-                    <li>Strong negative correlation between economic development and child deprivation</li>
-                    <li>Geographic concentration of high deprivation rates in Africa and parts of Asia</li>
-                    <li>Minimal gender differences in most countries, though some exceptions exist</li>
-                    <li>Positive progress over time in many countries, though at varying rates</li>
-                    <li>Multiple socioeconomic factors correlate with child deprivation, suggesting complex causality</li>
-                </ul>
-            </div>
-            
-            <div class="footer">
-                <p>Analysis based on UNICEF data on child deprivation indicators</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    
+            // 注册地图数据
+            echarts.registerMap('china', chinaGeo);
+            echarts.registerMap('tibet', tibetGeo);
+
+            // 主地图配置
+            const mainOption = {
+                title: {
+                    text: '中国地图',
+                    left: 'center'
+                },
+                geo: {
+                    map: 'china',
+                    roam: true,
+                    zoom: 1.2,
+                    center: [104.1954, 35.8617],
+                    itemStyle: {
+                        areaColor: '#E5F6FF',
+                        borderColor: '#4a90e2',
+                        borderWidth: 1.5
+                    },
+                    label: {
+                        show: true,
+                        fontSize: 12,
+                        color: '#333'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            borderColor: '#FFA726',
+                            borderWidth: 2
+                        }
+                    },
+                    regions: [{
+                        name: '西藏',
+                        itemStyle: {
+                            areaColor: '#FFF3B0',
+                            borderColor: '#FFA726'
+                        }
+                    }]
+                },
+                series: [{
+                    type: 'map',
+                    geoIndex: 0,
+                    data: []
+                }]
+            };
+
+            // 西藏子图配置
+            const subOption = {
+                title: {
+                    text: '西藏自治区',
+                    left: 'center'
+                },
+                geo: {
+                    map: 'tibet',
+                    roam: false,
+                    zoom: 1.5,
+                    center: [88.7879, 31.1113],
+                    itemStyle: {
+                        areaColor: '#FFF2E0',
+                        borderColor: '#FF6B6B',
+                        borderWidth: 3
+                    },
+                    label: {
+                        show: true,
+                        fontWeight: 'bold',
+                        color: '#d62728',
+                        fontSize: 14
+                    }
+                },
+                series: [{
+                    type: 'map',
+                    geoIndex: 0,
+                    markPoint: {
+                        symbol: 'pin',
+                        symbolSize: 40,
+                        data: [{
+                            name: '拉萨',
+                            coord: [91.1172, 29.6537],
+                            label: {
+                                show: true,
+                                formatter: '拉萨\n海拔3650米',
+                                color: '#d62728',
+                                fontSize: 14
+                            },
+                            itemStyle: {
+                                color: '#ff0000'
+                            }
+                        }]
+                    }
+                }]
+            };
+
+            // 在mainOption和subOption设置后添加连接线
+            mainChart.setOption(mainOption);
+            subChart.setOption(subOption);
+
+            // 添加连接线
+            mainChart.setOption({
+                graphic: [{
+                    type: 'line',
+                    shape: {
+                        x1: '40%', y1: '50%',  /* 从主地图右侧 */
+                        x2: '60%', y2: '50%'   /* 到子地图左侧 */
+                    },
+                    style: {
+                        stroke: '#FF6B6B',
+                        lineWidth: 4,  /* 更粗的线条 */
+                        lineDash: [0],  /* 实线 */
+                        shadowBlur: 10,
+                        shadowColor: '#FF6B6B'
+                    },
+                    z: 100
+                }]
+            });
+        }).catch(error => {
+            console.error('地图加载失败:', error);
+        });
+    </script>
+</body>
+</html>
